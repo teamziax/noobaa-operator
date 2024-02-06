@@ -1,0 +1,52 @@
+name: okd-release
+
+on:
+  workflow_dispatch: {}
+jobs:
+  image-push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-go@v4
+      with:
+        go-version-file: go.mod
+
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push docker images
+      env:
+        IMAGE_REPOSITORY: ghcr.io/teamziax/noobaa-operator
+      run: |
+        function strip_prefix() {
+          local str="$1"
+          local prefix="$2"
+        
+          echo ${str#"$prefix"}
+        }
+        
+        function get_noobaa_version() {
+          local version=$(go run cmd/version/main.go)
+          local without_v=$(strip_prefix "$version" v)
+        
+          echo "v$without_v"
+        }
+        
+        function get_noobaa_version_without_v() {
+          local version=$(go run cmd/version/main.go)
+          echo $(strip_prefix "$version" v)
+        }
+        
+        make all
+        
+        docker tag noobaa/noobaa-operator:$(get_noobaa_version_without_v) ${IMAGE_REPOSITORY}/noobaa-operator:$(get_noobaa_version)
+        docker push ${IMAGE_REPOSITORY}/noobaa-operator:$(get_noobaa_version)
+
+        docker tag noobaa/noobaa-operator-catalog:$(get_noobaa_version_without_v) ${IMAGE_REPOSITORY}/noobaa-operator-catalog:$(get_noobaa_version)
+        docker push ${IMAGE_REPOSITORY}/noobaa-operator-catalog:$(get_noobaa_version)
