@@ -8,7 +8,9 @@ COPY deploy/obc/objectbucket.io_objectbuckets_crd.yaml manifests/lib-bucket-prov
 COPY deploy/obc/objectbucket.io_objectbucketclaims_crd.yaml manifests/lib-bucket-provisioner/1.0.0/
 RUN /bin/initializer -o ./bundles.db
 
+
 FROM scratch
+COPY ["nsswitch.conf", "/etc/nsswitch.conf"]
 COPY --from=builder /bundles.db /bundles.db
 COPY --from=builder /bin/registry-server /registry-server
 COPY --from=builder /bin/grpc_health_probe /bin/grpc_health_probe
