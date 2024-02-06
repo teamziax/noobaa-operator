@@ -12,7 +12,7 @@ jobs:
 
     - uses: shivanshs9/setup-k8s-operator-sdk@v1
       with:
-        version: "^1.33.0"
+        version: "^1.30.0"
 
     - uses: actions/setup-go@v4
       with:
