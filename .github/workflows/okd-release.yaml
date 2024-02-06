@@ -10,7 +10,7 @@ jobs:
       with:
         fetch-depth: 1
 
-    - uses: actions/setup-go@v2
+    - uses: actions/setup-go@v5
       with:
         go-version-file: go.mod
 
@@ -24,6 +24,8 @@ jobs:
       env:
         IMAGE_REPOSITORY: ghcr.io/teamziax/noobaa-operator
       run: |
+        echo "${operator-sdk version}"
+        
         function strip_prefix() {
           local str="$1"
           local prefix="$2"
