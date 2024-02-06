@@ -43,7 +43,7 @@ CMD_MANAGER ?= cmd/manager/main.go
 
 export NOOBAA_OPERATOR_LOCAL ?= $(BIN)/noobaa-operator-local
 # OPERATOR_SDK is to install olm only.
-export OPERATOR_SDK_VERSION ?= v0.17.2
+export OPERATOR_SDK_VERSION ?= v0.33.0
 export OPERATOR_SDK ?= build/_tools/operator-sdk-$(OPERATOR_SDK_VERSION)
 
 #------------#
